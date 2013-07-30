@@ -1,0 +1,187 @@
+/*
+ * CSS for TreeView module
+ *
+ * webtrees: Web based Family History software
+ * Copyright (C) 2013 webtrees development team.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id: treeview.css 14722 2013-01-24 18:51:41Z lukasz $
+ */
+
+#tree-title {text-align:center; margin-bottom:100px;}
+
+.tv_out {
+	position:relative;
+	overflow:hidden;
+	height:100%;
+	width:99%;
+	border:thin solid #CCCCCC; /* customizable */
+	min-height:350px; /* customizable, not mandatory, but should be set to have allways something to display */
+	max-height:10000px; /* customizable, not mandatory, but should be set not too high to limit the size of ajax requests and not too low to enable whole big trees printing */
+	background:#E6E6E6; /* customizable */
+}
+.tv_out img {
+	border:0;
+}
+
+.tv_in {
+	clear:both;
+	position:relative; /* required for re-calculating size on ajax updates */	
+	left:0;
+	top:0;
+	cursor:move;
+	display:inline-block; /* prevent from blinking on IE */
+}
+
+/* The toolbox style. Button's images come from the active theme */
+#tv_tools, #tvStylesSubmenu {
+	display:inline-block;
+	position:absolute;
+	left:0;
+	top:0;
+	padding:0;
+	margin:0; /* required */
+	z-index:90; /* should be < 100 because 100 is the z-index of WT menus */
+	background-color:#efefef; /* customizable */
+	border:1px outset #dfdfdf; /* customizable */
+	border-radius:4px; /* customizable */
+	box-shadow:1px 1px 2px #cfcfdf; /* customizable */
+}
+
+/* styles submenu */
+#tvStylesSubmenu {
+	display:none;
+	left:0;
+	top:0;
+	z-index:91; /* just over tv_tools */ 
+}
+
+#tv_tools ul {
+	list-style:none;
+	margin:0;
+	padding:0; /* required */
+}
+#tv_tools li.tv_button {
+	float:left;
+	position:relative;
+	padding:0; /* required */
+ 	margin:0;
+	width:24px;
+	height:24px;
+	text-align:center;
+	vertical-align:middle;
+	border:thin solid #efefef; /* customizable */
+	background-color:#efefef; /* customizable */
+	border-radius:4px;
+}
+#tvStylesSubmenu li.tv_button {
+	float :none;
+}
+#tv_tools li.tv_button a {
+	margin:0;
+	display:block;
+}
+#tv_tools li.tv_button:hover {
+	background:#fffdfd; /* customizable */
+	border:thin outset #fdfffd; /* customizable */
+	cursor:pointer;
+}
+#tv_tools li.tvPressed {
+	border:thin inset #ffffff; /* customizable */
+}
+#tv_tools ul li img {
+	border:none;
+	margin:0;
+	padding:0;
+	max-width:22px;
+	max-height:22px;
+	_width:22px; /* hack for ie */
+	_height:22px; /* hack for ie */
+	cursor:pointer;
+	text-align:center;
+	vertical-align:middle;
+}
+#tv_tools ul li a.help img.icon {
+	margin:0;
+	margin-top:3px;
+	padding:0;
+	width:15px;
+	height:15px;
+}
+
+#tvToolsHandler {
+	float:left;
+	cursor:move;
+	height:22px;
+	width:2px;
+	border:thin inset #f6f6f6; /* customizable */
+	margin:2px;
+	overflow:hidden; /* required for IE */
+}
+
+#tvToolsHandler:hover {
+	border:thin outset #f6f6f6; /* customizable */
+}
+
+/* === END treeview viewport styles === */
+
+
+/* SVG styles */
+.genderM {
+	//fill:#DFF !important;
+	fill: url(#Mgradient);
+}
+.genderF {
+	//fill:#FDD !important;
+	fill: url(#Fgradient);
+}
+.genderU {
+	//fill:#CCC !important;
+	fill: url(#Ugradient);
+}
+
+.personBox {
+	stroke: black;
+	stroke-width: 2;
+}
+
+.personBoxHTML img, .personBoxHTML i {
+	max-width: 90px;
+	max-height: 90px;
+}
+.personBox div.nameContainer {
+	padding: 5px;
+
+}
+.personBox span.SURN {
+	font-weight: 500;
+	//color: red;
+}
+.personBoxHTML div.portraitContainer {
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 5px;
+	text-align: center;
+}
+
+
+polyline.connection{
+	fill: none;
+	stroke: black;
+	stroke-width: 1;
+}
+
+

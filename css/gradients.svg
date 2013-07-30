@@ -1,0 +1,19 @@
+<svg width=0 height=0 xmlns="http://www.w3.org/2000/svg">
+   <defs>
+      <!-- Gradient for Female boxes -->
+      <linearGradient x1="1" y1="1" x2="1" y2="0" id="Fgradient">
+         <stop stop-color="#E587E8" offset="0"/> <!-- Bottom Color -->
+         <stop stop-color="#FCA8FF" offset="1"/> <!-- Top Color -->
+      </linearGradient>
+      <!-- Gradient for Male boxes -->
+      <linearGradient x1="1" y1="1" x2="1" y2="0" id="Mgradient">
+         <stop stop-color="#81B3DB" offset="0"/> <!-- Bottom Color -->
+         <stop stop-color="#96CEFF" offset="1"/> <!-- Top Color -->
+      </linearGradient>
+      <!-- Gradient for Male boxes -->
+      <linearGradient x1="1" y1="1" x2="1" y2="0" id="Ugradient">
+         <stop stop-color="#B0B0B0" offset="0"/> <!-- Bottom Color -->
+         <stop stop-color="#D9D9D9" offset="1"/> <!-- Top Color -->
+      </linearGradient>
+   </defs>
+</svg>

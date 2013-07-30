@@ -26,18 +26,18 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-class treenew_WT_Module extends WT_Module implements WT_Module_Tab {	
+class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {	
 	var $headers; // CSS and script to include in the top of <head> section, before theme's CSS
 	var $js; // the TreeViewHandler javascript
 	
 	// Extend WT_Module. This title should be normalized when this module will be added officially
 	public function getTitle() {
-		return /* I18N: Name of a module */ WT_I18N::translate('New Interactive tree (WIP)');
+		return /* I18N: Name of a module */ WT_I18N::translate('SVG Tree');
 	}
 
 	// Extend WT_Module
 	public function getDescription() {
-		return /* I18N: Description of the “Interactive tree” module */ WT_I18N::translate('An interactive tree, showing all the ancestors and descendants of a person.');
+		return /* I18N: Description of the “Interactive tree” module */ WT_I18N::translate('An SVG-based tree view');
 	}
 	
 	// Implement WT_Module_Tab

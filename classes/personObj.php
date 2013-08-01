@@ -26,11 +26,12 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-class SVGTree_PersonBox {
+class SVGTree_PersonObj {
 	var $p;
 	var $x = 0;
 	var $y = 0;
 	var $format; // 'thumbnail' or 'full'
+	var $generation;
 
 	/**
 	* svgtree_Person Constructor
@@ -42,6 +43,14 @@ class SVGTree_PersonBox {
 		$this->format = $f;
 		return $this;
 	}
+
+	/**
+	 * Getter and setter functions for $generation
+	 */
+	public function setGeneration($gen){ $this->generation = $gen; }
+
+	public function getGeneration(){ return $this->generation; }
+
 
 	/**
 	 * Get the markup for the person's box

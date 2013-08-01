@@ -137,9 +137,12 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 	}
 	private function includes(){
 		require_once WT_MODULES_DIR.$this->getName().'/classes/svgtree.php';
-		require_once WT_MODULES_DIR.$this->getName().'/classes/personBox.php';
+		require_once WT_MODULES_DIR.$this->getName().'/classes/personObj.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/helper.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/generationCollection.php';
+		require_once WT_MODULES_DIR.$this->getName().'/classes/connection.php';
+		require_once WT_MODULES_DIR.$this->getName().'/classes/spouseConnection.php';
+		require_once WT_MODULES_DIR.$this->getName().'/classes/parentChildConnection.php';
 	}
 
 	public function css() {

@@ -142,15 +142,18 @@
 /* SVG styles */
 .genderM {
 	//fill:#DFF !important;
-	fill: url(#Mgradient);
+	//fill: url(#Mgradient);
+	fill: url(#Ngradient);
 }
 .genderF {
 	//fill:#FDD !important;
-	fill: url(#Fgradient);
+	//fill: url(#Fgradient);
+	fill: url(#Ngradient);
 }
 .genderU {
 	//fill:#CCC !important;
-	fill: url(#Ugradient);
+	//fill: url(#Ugradient);
+	fill: url(#Ngradient);
 }
 
 .personBox {
@@ -173,8 +176,12 @@
 .personBoxHTML div.portraitContainer {
 	margin-left: auto;
 	margin-right: auto;
+	margin: 5px;
 	padding-top: 5px;
+	min-height: 80px;
 	text-align: center;
+	background-color: white;
+	border: 1px solid black;
 }
 
 
@@ -182,6 +189,13 @@ polyline.connection{
 	fill: none;
 	stroke: black;
 	stroke-width: 1;
+}
+
+polyline.marriageConnection{
+	stroke: blue;
+}
+polyline.childConnection{
+	stroke: red;
 }
 
 

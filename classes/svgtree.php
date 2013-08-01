@@ -32,6 +32,10 @@ class SVGTree {
 	var $genCol;
 	var $maxGensUp;
 	var $maxGensDown;
+	var $people = array();
+	var $sConns = array();
+	var $pcConns = array();
+	var $genSibConnOffset = array();
 
 	/**
 	* SVGTree Constructor
@@ -50,7 +54,7 @@ class SVGTree {
 		}
 		$allPartners = ($allPartners == 'true' ? true : false);
 		$this->allPartners = $allPartners;
-  		$this->genCol = new SVGTree_GenerationCollection();
+  		//$this->genCol = new SVGTree_GenerationCollection();
 	}
 
 	/**
@@ -107,7 +111,40 @@ class SVGTree {
 			$base_x, $base_y, $spouses=false,$parents=false,$children=false) {
 
 		$r = '';
+
+		// Position each box
+		$x = 0; $y = 0;
+		foreach($this->people as $gen => $generation){
+			$x = 0;
+			$y = 180*$gen;
+			foreach($generation as $pobj){
+				$pobj->setCoords($x,$y);
+				$x = $pobj->getConnectionPoint('right')[0]+20;
+			}
+		}
+
+		// Draw the spouse connections
+		foreach ($this->sConns as $sC){
+			//foreach ($sCouter as $sC){
+				$r .= $sC->getConnectionMarkup();
+			//}
+		}
+
+		// Draw the parent/child connections
+		foreach ($this->pcConns as $pcC){
+			$r .= $pcC->getConnectionMarkup();
+		}
+
+		// Draw the boxes
+		// Note: we can't do this above, or the connections will get 
+		// rendered on top of the boxes
+		foreach($this->people as $gen => $generation){
+			foreach($generation as $pobj){
+				$r .= $pobj->getPersonBoxMarkup();
+			}
+		}
 		// For each generation
+		/*
 		foreach($this->genCol->getAllGenerations() as $gennum => $sibgrps){
 			$x = 0;
 			$y = 150*$gennum;
@@ -117,8 +154,8 @@ class SVGTree {
 				// For each person
 				foreach ($sibgrp as $person){
 					// Create a new box for the person
-					$personBox = new SVGTree_PersonBox($person, 'thumbnail');
-					$personBox->setCoords($x,$y);
+					//$personBox = new SVGTree_PersonBox($person, 'thumbnail');
+					//$personBox->setCoords($x,$y);
 
 					// Add the box markup to the tree
 					$r .= $personBox->getPersonBoxMarkup();
@@ -129,10 +166,9 @@ class SVGTree {
 					// Set $x up for the next person
 					$x = $personBox->getConnectionPoint('right')[0]+20;
 				}
-				// Draw the connection between siblings
-				
 			}
 		}	
+		 */
 		
 		/* Return final HTML tree */
 		return $r;
@@ -165,10 +201,27 @@ class SVGTree {
 				// render, return
 				return;
 			} else { // Else, add self, spouses, and descendants
+				// If this person has already been processed, skip
+				if (!empty($this->people[$gen])){
+					if (array_key_exists($person->getXref(), $this->people[$gen])){
+						return null;
+					}
+				}
+
+				// if this is the first person for the generation, set up the value for $genSibConnOffset
+				if (empty($this->genSibConnOffset[$gen])){
+					$this->genSibConnOffset[$gen]=0;
+				}
+
 				// Add self
-				$this->genCol->addToGeneration($person,$gen,$sibgrp);
+				$pobj = new SVGTree_PersonObj($person,'thumbnail');	
+				$pobj->setGeneration($gen);
+				$this->people[$gen][$person->getXref()] = $pobj;
+
+				//$this->genCol->addToGeneration($person,$gen,$sibgrp);
 
 				// For each family where $person is a spouse
+				$i = 0;
 				foreach($person->getSpouseFamilies() as $sp_fam){
 					// For each spouse
 					foreach($sp_fam->getSpouses() as $spouse){
@@ -176,18 +229,43 @@ class SVGTree {
 						if ($spouse === $person){ continue; }
 
 						// Add spouse
-						$this->genCol->addToGeneration($spouse,$gen,$sibgrp);
+						$sobj = new SVGTree_PersonObj($spouse,'thumbnail');	
+						$sobj->setGeneration($gen);
+						$this->people[$gen][$spouse->getXref()] = $sobj;
+
+						// Create a spouseConnection from spouse to person
+						$sconn = new SVGTree_spouseConnection($pobj,$sobj);
+						$sconn->setMidpointYOffset($i*(-10));
+						array_push($this->sConns,$sconn);
+						#$this->sConns[$person->getXref()][$spouse->getXref()] = $sconn;
+						#$this->sConns[$spouse->getXref()][$person->getXref()] = $sconn;
+
+						//$this->genCol->addToGeneration($spouse,$gen,$sibgrp);
 					}
 					
 					// Get next sibling group for generation
 					//$newSibGrp = $this->genCol->getNextSibGrp($gen+1);
 					// gatherPeople on children
 					foreach($sp_fam->getChildren() as $child){
-						//$this->gatherPeople($child,$gen+1,'down',$newSibGrp);
-						$this->gatherPeople($child,$gen+1,'down',0);
+
+						// gather the tree for the child
+						$cobj = $this->gatherPeople($child,$gen+1,'down',0);
+
+						if (!empty($cobj)){
+							$cpC = new SVGTree_parentChildConnection($cobj,$pobj,$sobj);
+							$sGON = $this->genSibConnOffset[$gen]; // TODO: change this to conn_num
+							echo "sGON: $sGON";
+							$offset = 20 + pow(-1,($sGON%2))*3*($sGON-($sGON%2));
+							#$sibGrpOffset = 0;
+							$cpC->setMidPointYOffset($offset);
+							$this->pcConns[$child->getXref()] = $cpC;
+						}
 
 					}
+					$this->genSibConnOffset[$gen]++;
+					$i++;
 				}
+				return $pobj;
 			}
 		}
 	}

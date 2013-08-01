@@ -254,7 +254,7 @@ class SVGTree {
 						if (!empty($cobj)){
 							$cpC = new SVGTree_parentChildConnection($cobj,$pobj,$sobj);
 							$sGON = $this->genSibConnOffset[$gen]; // TODO: change this to conn_num
-							echo "sGON: $sGON";
+							#echo "sGON: $sGON";
 							$offset = 20 + pow(-1,($sGON%2))*3*($sGON-($sGON%2));
 							#$sibGrpOffset = 0;
 							$cpC->setMidPointYOffset($offset);

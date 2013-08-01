@@ -80,7 +80,10 @@ class SVGTree {
 		$this->maxGensDown = $generations;
 		$this->gatherPeople($this->rootPerson, $generations, 'up');
 
-		$r = '<svg xmlns="http://www.w3.org/2000/svg">';
+		$r = '';
+		//$r .= "<button id=zoomIn>Zoom In</button>";
+		//$r .= "<button id=zoomOut>Zoom Out</button>";
+		$r .= '<div id=treeDiv><svg id=treeContainer width=10000 height=10000 xmlns="http://www.w3.org/2000/svg">';
 		$r .= $this->getTreeMarkup(
 			//$this->rootPerson, 
 			$generations, 
@@ -89,7 +92,7 @@ class SVGTree {
 			0,
 			0
 		);
-		$r .= '</svg>';
+		$r .= '</svg></div>';
 		
 		return $r;
 	}
@@ -236,6 +239,8 @@ class SVGTree {
 						// Create a spouseConnection from spouse to person
 						$sconn = new SVGTree_spouseConnection($pobj,$sobj);
 						$sconn->setMidpointYOffset($i*(-10));
+						$sconn->appendToCssClass("marriage".($i+1));
+						// TODO: set marriage type
 						array_push($this->sConns,$sconn);
 						#$this->sConns[$person->getXref()][$spouse->getXref()] = $sconn;
 						#$this->sConns[$spouse->getXref()][$person->getXref()] = $sconn;

@@ -115,6 +115,12 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 					->setPageTitle(WT_I18N::translate('Interactive tree of %s', $person->getFullName()))
 					->pageHeader()
 					//->addExternalJavascript($this->js())
+					->addExternalJavascript($this->url().'/js/jquery.panzoom.js')
+					->addInlineJavascript('
+					$(document).ready(function(){
+						$("#treeContainer").panzoom({ });
+					});
+					')
 					//->addInlineJavascript($js)
 					->addInlineJavascript('
 					if (document.createStyleSheet) {
@@ -145,16 +151,20 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 		require_once WT_MODULES_DIR.$this->getName().'/classes/parentChildConnection.php';
 	}
 
+	public function url(){
+		return WT_STATIC_URL.WT_MODULES_DIR.$this->getName();
+	}
+
 	public function css() {
-		return WT_STATIC_URL.WT_MODULES_DIR.$this->getName().'/css/treeview.css';
+		return $this->url().'/css/treeview.css';
 	}
 	
 	public function js() {
-		return WT_STATIC_URL.WT_MODULES_DIR.$this->getName().'/js/treeview.js';
+		return $this->url().'/js/treeview.js';
 	}
 
 	public function svg_defs(){
-		$r = file_get_contents(WT_STATIC_URL.WT_MODULES_DIR.$this->getName().'/css/gradients.svg');
+		$r = file_get_contents($this->url().'/css/gradients.svg');
 		return $r;
 	}
 

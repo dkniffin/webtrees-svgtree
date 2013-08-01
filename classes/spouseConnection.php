@@ -30,6 +30,7 @@ class SVGTree_spouseConnection extends SVGTree_Connection {
 	var $sp1;
 	var $sp2;
 	var $type;
+	var $cssClass = 'marriageConnection';
 
 	function __construct($spouse1box,$spouse2box) {
 		$this->sp1 = $spouse1box;
@@ -43,7 +44,7 @@ class SVGTree_spouseConnection extends SVGTree_Connection {
 		$end = $startEnd[1];
 
 		#echo "drawing spouse connection for ".$this->sp1->p->getFullName()." and ".$this->sp2->p->getFullName()."<br/>";
-		return $this->getConnectionMarkupFromPoints($start, $end, 'marriageConnection');
+		return $this->getConnectionMarkupFromPoints($start, $end, $this->cssClass);
 	}
 	static public function getStartEnd($sp1, $sp2){
 		// Calculate the two closer points
@@ -73,4 +74,8 @@ class SVGTree_spouseConnection extends SVGTree_Connection {
 
 
 	public function setMarriageType($type){ }
+
+	public function appendToCssClass($addition){
+		$this->cssClass .= " $addition";
+	}
 }

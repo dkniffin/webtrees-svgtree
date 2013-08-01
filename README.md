@@ -28,8 +28,10 @@ Styling
 =======
 All colors and such are stylable via CSS and SVG documents. More details to come later.
 
-Coming Soon
+To Do
 ===========
+* Smash some bugs
+* Add javascript to make it pannable (and zoomable?)
 * URL options
 ** genup - # of generations to render upward
 ** gendown - # of generations to render downward

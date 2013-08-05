@@ -25,6 +25,8 @@ div#treeDiv {
 	width:100%;
   	height:600px;
   	overflow:hidden;
+	background-color: #C9C9C9;
+	border: 3px solid black;
 }
 
 #tree-title {text-align:center; margin-bottom:100px;}
@@ -145,7 +147,7 @@ div#treeDiv {
 /* === END treeview viewport styles === */
 
 
-/* SVG styles */
+/* SVG gender styles */
 .genderM {
 	//fill:#DFF !important;
 	//fill: url(#Mgradient);
@@ -162,6 +164,7 @@ div#treeDiv {
 	fill: url(#Ngradient);
 }
 
+/* The box for each person */
 .personBox {
 	stroke: black;
 	stroke-width: 2;
@@ -170,11 +173,17 @@ div#treeDiv {
 .personBoxHTML img, .personBoxHTML i {
 	max-width: 90px;
 	max-height: 90px;
+	width: auto;
+	height: auto;
+}
+.personBoxHTML i {
+	min-width: 33px;
+	min-height: 45px;
 }
 .personBox div.nameContainer {
 	padding: 5px;
-
 }
+// Surname text
 .personBox span.SURN {
 	font-weight: 500;
 	//color: red;
@@ -191,17 +200,18 @@ div#treeDiv {
 }
 
 
+/* Connections */
 polyline.connection{
 	fill: none;
 	stroke: black;
 	stroke-width: 2;
 }
 
+/* Marriage Connections */
 polyline.marriageConnection.marriage1{ stroke: blue; }
 polyline.marriageConnection.marriage2{ stroke: #573473; }
 
-polyline.childConnection{
-	stroke: red;
-}
+/* Parent/Child Connections */
+polyline.childConnection{ stroke: red; }
 
 

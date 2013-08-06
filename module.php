@@ -129,6 +129,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 					->setPageTitle(WT_I18N::translate('Interactive tree of %s', $person->getFullName()))
 					->pageHeader()
 					//->addExternalJavascript($this->js())
+					->addExternalJavascript($this->url().'/js/svgweb/src/svg.js')
 					->addExternalJavascript($this->url().'/js/jquery.panzoom.js')
 					->addInlineJavascript('
 					$(document).ready(function(){

@@ -48,6 +48,9 @@ class SVGTree {
 		// Set the settings
 		$this->rootPerson = $root;
 		$this->maxGensUp = $genup;
+		if (empty($this->maxGensUp)){
+			$this->maxGensUp = 4;
+		}
 		$this->maxGensDown = $gendown;
 		$this->renderSiblings = $renderSiblings;
 		$this->renderAllSpouses = $renderAllSpouses;

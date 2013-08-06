@@ -28,6 +28,7 @@ if (!defined('WT_WEBTREES')) {
 
 class SVGTree_Connection {
 	var $mid_y_offset = 0;
+	var $render = true; // Whether or not to render the connection
 
 	function __construct() {
 		return $this;

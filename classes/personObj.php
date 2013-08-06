@@ -32,6 +32,7 @@ class SVGTree_PersonObj {
 	var $y = 0;
 	var $format; // 'thumbnail' or 'full'
 	var $generation;
+	var $render = true; // Whether or not to render the person
 
 	/**
 	* svgtree_Person Constructor

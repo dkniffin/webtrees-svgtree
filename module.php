@@ -101,15 +101,29 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 				global $controller;
 				$controller=new WT_Controller_Chart();
 
-				$tvName = 'tv';
-				$tv = new SVGTree();
-				ob_start();
+				/* Get URL params */
+				$genup = safe_GET('genup');
+				$gendown = safe_GET('gendown');
+				$renderSiblings = safe_GET('renderSiblings');
+				$renderAllSpouses = safe_GET('renderAllSpouses');
+				$boxType = safe_GET('boxType');
+				$orientation = safe_GET('orientation');
 
+
+				// TODO: validate URL params
+
+
+				// Get the person for whom the tree should be rendered
 				$person=$controller->getSignificantIndividual();
 
-				//list($html, $js)=$tv->drawViewport($person, 4);
+				// Create a new SVGTree object
+				$svgtree = new SVGTree($person,$genup,$gendown,$renderSiblings,$renderAllSpouses, $boxType, $orientation);
+
+				// Add some SVG objects
 				$html = $this->svg_defs();
-				$html .= $tv->drawViewport($person,3);
+
+				// Get the SVG for the tree
+				$html .= $svgtree->drawViewport();
 
 				$controller
 					->setPageTitle(WT_I18N::translate('Interactive tree of %s', $person->getFullName()))

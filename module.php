@@ -163,6 +163,9 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 		require_once WT_MODULES_DIR.$this->getName().'/classes/connection.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/spouseConnection.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/parentChildConnection.php';
+		// Support WT versions prior to 1.5
+		if (!class_exists('WT_Individual')){ include_once WT_MODULES_DIR.$this->getName().'/classes/personIndividualExtension.php';}
+
 	}
 
 	public function url(){

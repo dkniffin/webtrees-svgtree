@@ -95,7 +95,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 		$person=$controller->getSignificantIndividual();
 		
 		$menulabel = WT_I18N::translate('SVG Tree');
-		$menulink = 'module.php?mod='.$this->getName().'&amp;mod_action=menu&amp;rootid='.$person->getXref();
+		$menulink = 'module.php?mod='.$this->getName().'&amp;mod_action=menupage&amp;rootid='.$person->getXref();
 		$menuid = 'menu-svgtree';
       
                 $menu = new WT_Menu($menulabel, $menulink, $menuid);
@@ -115,7 +115,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 	public function modAction($mod_action) {
 		$this->includes();
 		switch($mod_action) {
-		case 'menu':
+		case 'menupage':
 			// TODO: Create a menu page view
 			break;
 		case 'kinship':

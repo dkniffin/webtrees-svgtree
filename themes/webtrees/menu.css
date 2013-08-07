@@ -1,0 +1,12 @@
+/* === Menu Styles == */
+
+#main-menu > li {
+	text-align: center;
+}
+
+
+#menu-svgtree {
+	background-image: url(svgtree-icon.png) !important;
+
+}
+

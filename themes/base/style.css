@@ -1,0 +1,111 @@
+/*
+ * CSS for TreeView module
+ *
+ * webtrees: Web based Family History software
+ * Copyright (C) 2013 webtrees development team.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id: treeview.css 14722 2013-01-24 18:51:41Z lukasz $
+ */
+
+div#treeDiv {
+	width:100%;
+  	height:600px;
+  	overflow:hidden;
+	background-color: #C9C9C9;
+	border: 3px solid black;
+}
+
+#tree-title {text-align:center; margin-bottom:100px;}
+
+/* === Menu Styles == */
+
+#menu-svgtree {
+	background-image: url(../images/svgtree-icon.png);
+}
+
+/* === END treeview viewport styles === */
+
+
+/* SVG gender styles */
+.genderM {
+	//fill:#DFF !important;
+	//fill: url(#Mgradient);
+	fill: url(#Ngradient);
+}
+.genderF {
+	//fill:#FDD !important;
+	//fill: url(#Fgradient);
+	fill: url(#Ngradient);
+}
+.genderU {
+	//fill:#CCC !important;
+	//fill: url(#Ugradient);
+	fill: url(#Ngradient);
+}
+
+/* The box for each person */
+.personBox {
+	stroke: black;
+	stroke-width: 2;
+}
+
+.personBoxHTML img, .personBoxHTML i {
+	max-width: 90px;
+	max-height: 90px;
+	width: auto;
+	height: auto;
+}
+.personBoxHTML i {
+	min-width: 33px;
+	min-height: 45px;
+}
+.personBox div.nameContainer {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+// Surname text
+.personBox span.SURN {
+	font-weight: 500;
+	//color: red;
+}
+.personBoxHTML div.portraitContainer {
+	margin-left: auto;
+	margin-right: auto;
+	margin: 5px;
+	padding-top: 5px;
+	min-height: 80px;
+	text-align: center;
+	background-color: white;
+	border: 1px solid black;
+}
+
+
+/* Connections */
+polyline.connection{
+	fill: none;
+	//stroke: black;
+	//stroke-width: 2;
+}
+
+/* Marriage Connections */
+polyline.marriageConnection.marriage1 { stroke: blue; }
+polyline.marriageConnection.marriage2 { stroke: #573473; }
+
+/* Parent/Child Connections */
+polyline.childConnection { stroke: red; }
+
+

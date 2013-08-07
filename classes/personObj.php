@@ -105,7 +105,7 @@ class SVGTree_PersonObj {
 	private function getHeight(){
 		switch ($this->format){
 		case 'thumbnail':
-			return 130;
+			return 140;
 		case 'full':
 			return 90;
 		}

@@ -26,7 +26,7 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {	
+class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Menu {	
 	var $headers; // CSS and script to include in the top of <head> section, before theme's CSS
 	var $js; // the TreeViewHandler javascript
 	
@@ -75,27 +75,50 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 
 	// Implement WT_Module_Tab
 	public function getPreLoadContent() {
-		// We cannot use jQuery("head").append(<link rel="stylesheet" ...as jQuery is not loaded at this time
-		return
-			'<script>
-			if (document.createStyleSheet) {
-				document.createStyleSheet("'.$this->css().'"); // For Internet Explorer
-			} else {
-				var newSheet=document.createElement("link");
-    		newSheet.setAttribute("rel","stylesheet");
-    		newSheet.setAttribute("type","text/css");
-   			newSheet.setAttribute("href","'.$this->css().'");
-		    document.getElementsByTagName("head")[0].appendChild(newSheet);
-			}
-			</script>';
+		return $this->cssJS();
 	}
+
+	// Implement WT_Module_Menu
+	public function defaultMenuOrder(){
+		return 12;
+	}
+
+	// Implement WT_Module_Menu
+        public function getMenu() {
+                global $controller, $SEARCH_SPIDER;      
+      
+                if ($SEARCH_SPIDER) return null;
+      
+                // Quick loading of css to prevent page flickering.
+                echo $this->cssJS();
+		
+		$person=$controller->getSignificantIndividual();
+		
+		$menulabel = WT_I18N::translate('SVG Tree');
+		$menulink = 'module.php?mod='.$this->getName().'&amp;mod_action=menu&amp;rootid='.$person->getXref();
+		$menuid = 'menu-svgtree';
+      
+                $menu = new WT_Menu($menulabel, $menulink, $menuid);
+
+		$menu->addSubmenu(
+			new WT_Menu(
+			WT_I18N::translate('Kinship Chart for %s', $person->getFullName()), 
+			'module.php?mod='.$this->getName().'&amp;mod_action=kinship&amp;rootid='.$person->getXref(),
+			'menu-svg-kinship')
+		);
+      
+                return $menu;
+        } 
 
 	// Extend WT_Module
 	// We define here actions to proceed when called, either by Ajax or not
 	public function modAction($mod_action) {
 		$this->includes();
 		switch($mod_action) {
-		case 'treeview':
+		case 'menu':
+			// TODO: Create a menu page view
+			break;
+		case 'kinship':
 				error_reporting(E_ALL);
 				ini_set('display_errors', 'on');
 				global $controller;
@@ -137,19 +160,16 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 					});
 					')
 					//->addInlineJavascript($js)
-					->addInlineJavascript('
-					if (document.createStyleSheet) {
-						document.createStyleSheet("'.$this->css().'"); // For Internet Explorer
-					} else {
-						jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="'.$this->css().'">\');
-					}
-				');
+					->addInlineJavascript($this->cssJS(false));
 
 			if (WT_USE_LIGHTBOX) {
 				$album = new lightbox_WT_Module();
 				$album->getPreLoadContent();
 			}
 			echo $html;
+			break;
+		case 'pedigree':
+			// TODO: Create a pedigree view
 			break;
 		default:
 			header('HTTP/1.0 404 Not Found');
@@ -172,16 +192,64 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab {
 		return WT_STATIC_URL.WT_MODULES_DIR.$this->getName();
 	}
 
+/*
 	public function css() {
 		return $this->url().'/css/treeview.css';
 	}
+*/
+
+	/* === Taken from Fancy Tree View Module === */
+	private function cssJS($wrapped=true) {
+		$module_dir = WT_STATIC_URL.WT_MODULES_DIR.$this->getName().'/';
+                if (file_exists($module_dir.WT_THEME_URL.'menu.css')) {
+                        $css = $this->getScript($module_dir.WT_THEME_URL.'menu.css');
+                }    
+                else {
+                        $css = $this->getScript($module_dir.'themes/base/menu.css');
+                }    
+                if(safe_GET('mod') == $this->getName()) {
+                        $css .= $this->getScript($module_dir.'themes/base/style.css');
+                        if (file_exists($module_dir.WT_THEME_URL.'style.css')) {
+                                $css .= $this->getScript($module_dir.WT_THEME_URL.'style.css');
+                        }                    
+                }                            
+		if ($wrapped){
+                	return '<script>'.$css.'</script>';
+		} else {
+                	return $css;
+		}
+
+	}
+
+	private function getScript($css){
+		// To prevent page flickering we must load the css asap. So we cannot use jQuery("head").append(<link rel="stylesheet" ... 
+                // as jQuery is not loaded at this time
+                return
+                        'if (document.createStyleSheet) {
+                                document.createStyleSheet("'.$css.'"); // For Internet Explorer
+                        } else {
+                                var newSheet=document.createElement("link");
+                                newSheet.setAttribute("rel","stylesheet");
+                                newSheet.setAttribute("type","text/css");
+                                newSheet.setAttribute("href","'.$css.'");
+                                document.getElementsByTagName("head")[0].appendChild(newSheet);
+                        }';
+
+	}
+
+	/* === End "taken from FTV" === */
 	
 	public function js() {
 		return $this->url().'/js/treeview.js';
 	}
 
 	public function svg_defs(){
-		$r = file_get_contents($this->url().'/css/gradients.svg');
+		$module_dir = WT_STATIC_URL.WT_MODULES_DIR.$this->getName().'/';
+		if (file_exists($module_dir.WT_THEME_URL.'gradients.svg')) {
+			$r = file_get_contents($module_dir.WT_THEME_URL.'/gradients.svg');
+		} else {
+			$r =  file_get_contents($module_dir.'themes/base/gradients.svg');
+		}
 		return $r;
 	}
 

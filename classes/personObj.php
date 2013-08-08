@@ -39,7 +39,7 @@ class SVGTree_PersonObj {
 	* @param WT_Individual $person The person object to use
 	* @param string $f The format to use for the box
 	*/
-	function __construct(WT_Individual $person, $f) {
+	function __construct($person, $f) {
 		$this->p = $person;
 		$this->format = $f;
 		return $this;

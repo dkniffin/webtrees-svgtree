@@ -84,13 +84,13 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 	}
 
 	// Implement WT_Module_Menu
-        public function getMenu() {
-                global $controller, $SEARCH_SPIDER;      
+   public function getMenu() {
+      global $controller, $SEARCH_SPIDER;      
       
-                if ($SEARCH_SPIDER) return null;
+      if ($SEARCH_SPIDER) return null;
       
-                // Quick loading of css to prevent page flickering.
-                echo $this->cssJS();
+      // Quick loading of css to prevent page flickering.
+      echo $this->cssJS();
 		
 		$person=$controller->getSignificantIndividual();
 		
@@ -98,7 +98,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 		$menulink = 'module.php?mod='.$this->getName().'&amp;mod_action=menupage&amp;rootid='.$person->getXref();
 		$menuid = 'menu-svgtree';
       
-                $menu = new WT_Menu($menulabel, $menulink, $menuid);
+      $menu = new WT_Menu($menulabel, $menulink, $menuid);
 
 		$menu->addSubmenu(
 			new WT_Menu(
@@ -107,60 +107,83 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 			'menu-svg-kinship')
 		);
       
-                return $menu;
-        } 
+      return $menu;
+   } 
 
 	// Extend WT_Module
 	// We define here actions to proceed when called, either by Ajax or not
 	public function modAction($mod_action) {
+		error_reporting(E_ALL);
+		ini_set('display_errors', 'on');
+
 		$this->includes();
 		switch($mod_action) {
 		case 'menupage':
 			// TODO: Create a menu page view
+			global $controller;
+			$controller=new WT_Controller_Page();
+
+			$person=$controller->getSignificantIndividual();
+
+			$controller
+				->setPageTitle(WT_I18N::translate('SVG Tree Menu'))
+				->pageHeader();
+				//->addInlineJavascript($this->cssJS(false));
+
+			$html = '<h2>SVG Tree Menu</h2>';
+			$html .= '<div id=svgMenuPgContainer>';
+			$html .= '<a class=svgMenuPgBtn
+				href=module.php?mod='.$this->getName().'&amp;mod_action=kinship&amp;rootid='.$person->getXref().'>
+				Kinship Chart for '.$person->getFullName()
+				.'</a>';
+			$html .= '</div>';
+
+			echo $html;
+
 			break;
 		case 'kinship':
-				error_reporting(E_ALL);
-				ini_set('display_errors', 'on');
-				global $controller;
-				$controller=new WT_Controller_Chart();
+			global $controller;
+			$controller=new WT_Controller_Chart();
 
-				/* Get URL params */
-				$genup = safe_GET('genup');
-				$gendown = safe_GET('gendown');
-				$renderSiblings = safe_GET('renderSiblings');
-				$renderAllSpouses = safe_GET('renderAllSpouses');
-				$boxType = safe_GET('boxType');
-				$orientation = safe_GET('orientation');
+			/* Get URL params */
+			$genup = safe_GET('genup');
+			$gendown = safe_GET('gendown');
+			$renderSiblings = safe_GET('renderSiblings');
+			$renderAllSpouses = safe_GET('renderAllSpouses');
+			$boxType = safe_GET('boxType');
+			$orientation = safe_GET('orientation');
 
 
-				// TODO: validate URL params
+			// TODO: validate URL params
 
 
-				// Get the person for whom the tree should be rendered
-				$person=$controller->getSignificantIndividual();
+			// Get the person for whom the tree should be rendered
+			$person=$controller->getSignificantIndividual();
 
-				// Create a new SVGTree object
-				$svgtree = new SVGTree($person,$genup,$gendown,$renderSiblings,$renderAllSpouses, $boxType, $orientation);
+			// Create a new SVGTree object
+			$svgtree = new SVGTree($person,$genup,$gendown,$renderSiblings,$renderAllSpouses, $boxType, $orientation);
 
-				// Add some SVG objects
-				$html = $this->svg_defs();
+			$html = '<h2>'.WT_I18N::translate('Kinship Chart for %s', $person->getFullName()).'</h2>';
 
-				// Get the SVG for the tree
-				$html .= $svgtree->drawViewport();
+			// Add some SVG objects
+			$html .= $this->svg_defs();
 
-				$controller
-					->setPageTitle(WT_I18N::translate('Interactive tree of %s', $person->getFullName()))
-					->pageHeader()
-					//->addExternalJavascript($this->js())
-					->addExternalJavascript($this->url().'/js/svgweb/src/svg.js')
-					->addExternalJavascript($this->url().'/js/jquery.panzoom.js')
-					->addInlineJavascript('
-					$(document).ready(function(){
-						$("#treeContainer").panzoom({ });
-					});
-					')
-					//->addInlineJavascript($js)
-					->addInlineJavascript($this->cssJS(false));
+			// Get the SVG for the tree
+			$html .= $svgtree->drawViewport();
+
+			$controller
+				->setPageTitle(WT_I18N::translate('Kinship Chart for %s', $person->getFullName()))
+				->pageHeader()
+				//->addExternalJavascript($this->js())
+				->addExternalJavascript($this->url().'/js/svgweb/src/svg.js')
+				->addExternalJavascript($this->url().'/js/jquery.panzoom.js')
+				->addInlineJavascript('
+				$(document).ready(function(){
+					$("#treeContainer").panzoom({ });
+				});
+				')
+				//->addInlineJavascript($js)
+				->addInlineJavascript($this->cssJS(false));
 
 			if (WT_USE_LIGHTBOX) {
 				$album = new lightbox_WT_Module();
@@ -177,14 +200,16 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 		}
 	}
 	private function includes(){
+		// Support WT versions prior to 1.5
+		if (version_compare(WT_VERSION, '1.5.0') < 0){
+		   require_once WT_MODULES_DIR.$this->getName().'/classes/individualExt.php';
+		}
 		require_once WT_MODULES_DIR.$this->getName().'/classes/svgtree.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/personObj.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/helper.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/connection.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/spouseConnection.php';
 		require_once WT_MODULES_DIR.$this->getName().'/classes/parentChildConnection.php';
-		// Support WT versions prior to 1.5
-		if (!class_exists('WT_Individual')){ include_once WT_MODULES_DIR.$this->getName().'/classes/personIndividualExtension.php';}
 
 	}
 

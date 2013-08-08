@@ -42,7 +42,7 @@ class SVGTree {
 	/**
 	* SVGTree Constructor
 	*/
-	function __construct(WT_Individual $root, $genup=4, $gendown='all',
+	function __construct($root, $genup=4, $gendown='all',
 	       	$renderSiblings=true, $renderAllSpouses=true, $boxType='thumbnail', $orientation='portrait') {
 
 		// Set the settings
@@ -107,7 +107,10 @@ class SVGTree {
 			foreach($generation as $pobj){
 				if ($pobj->render){
 					$pobj->setCoords($x,$y);
-					$x = $pobj->getConnectionPoint('right')[0]+20;
+					//$x = $pobj->getConnectionPoint('right')[0]+20;
+					$tmp = $pobj->getConnectionPoint('right');
+					$x = $tmp[0]+20;
+
 				}
 			}
 		}
@@ -191,6 +194,7 @@ class SVGTree {
 				// For each family where $person is a spouse
 				$i = 0;
 				foreach($person->getSpouseFamilies() as $sp_fam){
+					$sobj = null;
 					// For each spouse
 					foreach($sp_fam->getSpouses() as $spouse){
 						// Skip self
@@ -199,9 +203,11 @@ class SVGTree {
 						// Add spouse
 						$sobj = new SVGTree_PersonObj($spouse,'thumbnail');	
 						$sobj->setGeneration($gen);
-						//if ($this->renderAllSpouses === 'false'){
-							//$sobj->render = false;
-						//}
+						/*
+						if ($this->renderAllSpouses === 'false'){
+							$sobj->render = false;
+						}
+						 */
 
 						$this->people[$gen][$spouse->getXref()] = $sobj;
 

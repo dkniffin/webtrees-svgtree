@@ -37,6 +37,27 @@ div#treeDiv {
 	background-image: url(../images/svgtree-icon.png);
 }
 
+/* === Menu Page Styles === */
+
+#svgMenuPgContainer {
+	width: 100%;
+}
+.svgMenuPgBtn {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	text-align: center;
+	width: 800px;
+	border: 1px solid black;
+	border-radius: 16px;
+	background-color: white;
+	color: black;
+}
+.svgMenuPgBtn:hover {
+	background-color: black;
+	color: white;
+}
+
 /* === END treeview viewport styles === */
 
 

@@ -46,7 +46,7 @@ class SVGTree_parentChildConnection extends SVGTree_Connection {
 			$Pend = $parentStartEnd[1];
 		} else {
 			$Pstart = $this->p1->getConnectionPoint('right');
-			$Pend = array($start[0]+20,$start[1]);
+			$Pend = array($Pstart[0]+20,$Pstart[1]);
 		}
 
 		$midpointx = (($Pstart[0] + $Pend[0])/2);

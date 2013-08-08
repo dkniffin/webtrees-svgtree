@@ -9,5 +9,5 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-class WT_Person extends WT_Individual{ }
+class WT_Individual extends WT_Person { }
 ?>

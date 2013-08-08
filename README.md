@@ -1,28 +1,25 @@
 webtrees-svgtree
 ================
-
 An alternative tree module for the webtrees program. This is still a work in progress.
 
 Installation
 ============
-Simply extract the contents of this repo into a directory called svgtre in your
-webtrees modules_v3 directory.
+Simply extract the contents of this repo into a directory called svgtree in
+your webtrees modules_v3 directory.
 
     cd <webtrees root>/modules_v3/
     git clone https://github.com/oddityoverseer13/webtrees-svgtree.git svgtree
 
-NOTE: This module uses the SVN version of webtrees atm, so it won't work with
-most installations. Eventually, it'll use a standard webtrees version (probably
-1.5)
+Once you've done that, you'll need to enable the plugin in the administration panel.
 
 Usage
 =====
-At the moment, The only way to actually see the module's display is to go directly to the module URL:
-    http://<webtreesurl>/module.php?mod=svgtree&mod_action=treeview&ged=<ged>&rootid=<person_id>
+You can access the charts provided by the module via the SVG Tree menu. If you
+don't see it, you might need to enable the menu in the administration panel.
 
-At the moment, the module doesn't show up in any menus, but in the future I plan for it to (like the interactive tree module).
+There are also some URL options you may pass directly to the module:
 
-It also creates a tab on each persons page, but atm, it doesn't display anything.
+* genup - # of generations to display upward from the root person
 
 Styling
 =======
@@ -32,14 +29,12 @@ To Do
 ===========
 * Smash some bugs
 * URL options
-** genup - # of generations to render upward
 ** gendown - # of generations to render downward
 ** renderSiblings - Boolean indicating whether to render siblings or not
 ** renderSpouses - Boolean indicating whether to render spouses or not
 ** boxType - Thumbnail, full, etc
 ** orientation - portrait or landscape
 * A "full" box type, which will display more details about the individual
-* A menu options to display the module
 * Get the tabs working
 * Maybe have some global options in the admin pages for things like connection spacing, etc
-
+* Add some export functionality (SVG and PDF, hopefully).

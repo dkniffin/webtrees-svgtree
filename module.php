@@ -1,25 +1,4 @@
 <?php
-// TreeView module class
-//
-// Tip : you could change the number of generations loaded before ajax calls both in individual page and in treeview page to optimize speed and server load 
-//
-// Copyright (C) 2013 webtrees development team
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id: module.php 15088 2013-06-23 21:59:58Z greg $
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -44,6 +23,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 	public function defaultTabOrder() {
 		return 68;
 	}
+
 
 	// Implement WT_Module_Tab
 	public function getTabContent() {
@@ -146,12 +126,12 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
 			$controller=new WT_Controller_Chart();
 
 			/* Get URL params */
-			$genup = safe_GET('genup');
-			$gendown = safe_GET('gendown');
-			$renderSiblings = safe_GET('renderSiblings');
-			$renderAllSpouses = safe_GET('renderAllSpouses');
-			$boxType = safe_GET('boxType');
-			$orientation = safe_GET('orientation');
+			$genup = WT_FILTER::get('genup');
+			$gendown = WT_FILTER::get('gendown');
+			$renderSiblings = WT_FILTER::get('renderSiblings');
+			$renderAllSpouses = WT_FILTER::get('renderAllSpouses');
+			$boxType = WT_FILTER::get('boxType');
+			$orientation = WT_FILTER::get('orientation');
 
 
 			// TODO: validate URL params
@@ -232,7 +212,7 @@ class svgtree_WT_Module extends WT_Module implements WT_Module_Tab, WT_Module_Me
                 else {
                         $css = $this->getScript($module_dir.'themes/base/menu.css');
                 }    
-                if(safe_GET('mod') == $this->getName()) {
+                if(WT_FILTER::get('mod') == $this->getName()) {
                         $css .= $this->getScript($module_dir.'themes/base/style.css');
                         if (file_exists($module_dir.WT_THEME_URL.'style.css')) {
                                 $css .= $this->getScript($module_dir.WT_THEME_URL.'style.css');

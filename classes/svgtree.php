@@ -18,7 +18,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// $Id: class_treeview.php 15320 2013-07-18 19:59:52Z greg $
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -102,30 +101,34 @@ class SVGTree {
 		// Position each box
 		$x = 0; $y = 0;
 		foreach($this->people as $gen => $generation){
-			$x = 0;
+			$x = 0; // Can't assume 0....not sure how to figure this out
 			$y = 180*$gen;
-			foreach($generation as $pobj){
-				if ($pobj->render){
-					$pobj->setCoords($x,$y);
-					//$x = $pobj->getConnectionPoint('right')[0]+20;
-					$tmp = $pobj->getConnectionPoint('right');
-					$x = $tmp[0]+20;
+			foreach($generation as $person_object){
+				if ($person_object->render){
+					$childTreeWidth = $this->treeWidth($person_object->p);
+					$person_object->setCoords($x+($childTreeWidth/2),$y); // Set the coordinates for the box
+					//$x = $person_object->getConnectionPoint('right')[0]+20;
+					$tmp = $person_object->getConnectionPoint('right');
+					// TODO: This is where we'll adjust spacing to get an organized tree
+
+					$x = $tmp[0]+($childTreeWidth*110);
+
 
 				}
 			}
 		}
 
 		// Draw the spouse connections
-		foreach ($this->sConns as $sC){
-			if ($sC->render){
-				$r .= $sC->getConnectionMarkup();
+		foreach ($this->sConns as $spouse_connection){
+			if ($spouse_connection->render){
+				$r .= $spouse_connection->getConnectionMarkup();
 			}
 		}
 
 		// Draw the parent/child connections
-		foreach ($this->pcConns as $pcC){
-			if ($pcC->render){
-				$r .= $pcC->getConnectionMarkup();
+		foreach ($this->pcConns as $parent_child_connection){
+			if ($parent_child_connection->render){
+				$r .= $parent_child_connection->getConnectionMarkup();
 			}
 		}
 
@@ -133,9 +136,10 @@ class SVGTree {
 		// Note: we can't do this above, or the connections will get 
 		// rendered on top of the boxes
 		foreach($this->people as $gen => $generation){
-			foreach($generation as $pobj){
-				if ($pobj->render){
-					$r .= $pobj->getPersonBoxMarkup();
+			foreach($generation as $person_object){
+				if ($person_object->render){
+					$r .= $person_object->getPersonBoxMarkup();
+					
 				}
 			}
 		}
@@ -186,61 +190,75 @@ class SVGTree {
 				}
 
 				// Add self
-				$pobj = new SVGTree_PersonObj($person,'thumbnail');	
-				$pobj->setGeneration($gen);
-				$this->people[$gen][$person->getXref()] = $pobj;
+				$person_object = new SVGTree_PersonObj($person,'thumbnail');	
+				$person_object->setGeneration($gen);
+				$this->people[$gen][$person->getXref()] = $person_object;
 
 
 				// For each family where $person is a spouse
 				$i = 0;
-				foreach($person->getSpouseFamilies() as $sp_fam){
-					$sobj = null;
-					// For each spouse
-					foreach($sp_fam->getSpouses() as $spouse){
-						// Skip self
-						if ($spouse === $person){ continue; }
+				foreach($person->getSpouseFamilies() as $spouse_family){
+					$spouse_object = null;
+					foreach($spouse_family->getSpouses() as $spouse){ // For each spouse
+						if ($spouse === $person){ continue; } // Skip self
 
 						// Add spouse
-						$sobj = new SVGTree_PersonObj($spouse,'thumbnail');	
-						$sobj->setGeneration($gen);
+						$spouse_object = new SVGTree_PersonObj($spouse,'thumbnail');	
+						$spouse_object->setGeneration($gen);
 						/*
 						if ($this->renderAllSpouses === 'false'){
-							$sobj->render = false;
+							$spouse_object->render = false;
 						}
 						 */
 
-						$this->people[$gen][$spouse->getXref()] = $sobj;
+						$this->people[$gen][$spouse->getXref()] = $spouse_object;
 
 						// Create a spouseConnection from spouse to person
-						$sconn = new SVGTree_spouseConnection($pobj,$sobj);
-						$sconn->setMidpointYOffset($i*(-10));
-						$sconn->appendToCssClass("marriage".($i+1));
+						$spouse_connection = new SVGTree_spouseConnection($person_object,$spouse_object);
+						$spouse_connection->setMidpointYOffset($i*(-10));
+						$spouse_connection->appendToCssClass("marriage".($i+1));
 						// TODO: set marriage type
-						array_push($this->sConns,$sconn);
+						array_push($this->sConns,$spouse_connection);
 
 					}
 					
 					// For each child
-					foreach($sp_fam->getChildren() as $child){
+					foreach($spouse_family->getChildren() as $child){
 
 						// gather the tree for the child
-						$cobj = $this->gatherPeople($child,$gen+1,'down',0);
+						$child_obj = $this->gatherPeople($child,$gen+1,'down',0);
 
-						if (!empty($cobj)){
-							$cpC = new SVGTree_parentChildConnection($cobj,$pobj,$sobj);
-							// TODO: change this to conn_num
-							$sGON = $this->genSibConnOffset[$gen]; 
-							$offset = 20 + pow(-1,($sGON%2))*3*($sGON-($sGON%2));
-							$cpC->setMidPointYOffset($offset);
-							$this->pcConns[$child->getXref()] = $cpC;
+						if (!empty($child_obj)){
+							$child_parent_connector = new SVGTree_parentChildConnection($child_obj,$person_object,$spouse_object);
+							$conn_num = $this->genSibConnOffset[$gen]; 
+							$offset = 20 + pow(-1,($conn_num%2))*3*($conn_num-($conn_num%2));
+							$child_parent_connector->setMidPointYOffset($offset);
+							$this->pcConns[$child->getXref()] = $child_parent_connector;
 						}
 
 					}
 					$this->genSibConnOffset[$gen]++;
 					$i++;
 				}
-				return $pobj;
+				return $person_object;
 			}
 		}
+	}
+
+	/**
+	* Get the width (in people) of a person's tree
+	*/
+	private function treeWidth($parent) {
+		$width = 1; // Default to 1
+		foreach($parent->getSpouseFamilies() as $spouse_family){
+			$childTreeWidth = 0;
+			foreach($spouse_family->getChildren() as $child) {
+				$childTreeWidth += $this->treeWidth($child);
+			}
+			if ($childTreeWidth > $width) {
+					$width = $childTreeWidth;
+			}
+		}
+		return $width;
 	}
 }

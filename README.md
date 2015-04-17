@@ -1,6 +1,6 @@
 webtrees-svgtree
 ================
-An alternative tree module for the webtrees program. This is still a work in progress.
+An alternative tree module for the webtrees program. **This is still very much a work in progress. It still has some major bugs.**
 
 Installation
 ------------
